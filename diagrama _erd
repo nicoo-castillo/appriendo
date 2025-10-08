@@ -1,0 +1,82 @@
+promt: mira estamos haciendo un programa para un proyecto social basado en arriendos para estudiantes y tengo que hacer 
+una base de datos para luego hacer un erd en plantuml dime como y que tablas deberia en principio que sea necesario para el programa
+pero solo dame las necesarias ya que este erd es par la fase incial del proyecto y luego seguiremos desarrollando la base de datos
+
+diagrama: 
+@startuml
+!define primary_key(x) <u>x</u>
+!define foreign_key(x) <i>x</i>
+
+entity "usuarios" as usuarios {
+  primary_key(id_usuario) : INTEGER
+  --
+  nombre : VARCHAR(100)
+  apellido : VARCHAR(100)
+  email : VARCHAR(150)
+  contraseña : VARCHAR(255)
+  teléfono : VARCHAR(20)
+  tipo_usuario : VARCHAR(20)
+  fecha_registro : DATE
+}
+
+entity "estudiantes" as estudiantes {
+  primary_key(id_estudiante) : INTEGER
+  --
+  foreign_key(id_usuario) : INTEGER
+  universidad : VARCHAR(150)
+  carrera : VARCHAR(100)
+  año_ingreso : INTEGER
+  documento_identidad : VARCHAR(50)
+}
+
+entity "arrendadores" as arrendadores {
+  primary_key(id_arrendador) : INTEGER
+  --
+  foreign_key(id_usuario) : INTEGER
+  documento_identidad : VARCHAR(50)
+  verificado : BOOLEAN
+}
+
+entity "propiedades" as propiedades {
+  primary_key(id_propiedad) : INTEGER
+  --
+  foreign_key(id_arrendador) : INTEGER
+  dirección : VARCHAR(255)
+  ciudad : VARCHAR(100)
+  tipo_propiedad : VARCHAR(50)
+  precio_mensual : DECIMAL(10,2)
+  descripción : TEXT
+  disponible : BOOLEAN
+  fecha_publicación : DATE
+}
+
+entity "contratos" as contratos {
+  primary_key(id_contrato) : INTEGER
+  --
+  foreign_key(id_propiedad) : INTEGER
+  foreign_key(id_estudiante) : INTEGER
+  fecha_inicio : DATE
+  fecha_fin : DATE
+  monto_mensual : DECIMAL(10,2)
+  estado : VARCHAR(20)
+}
+
+entity "pagos" as pagos {
+  primary_key(id_pago) : INTEGER
+  --
+  foreign_key(id_contrato) : INTEGER
+  monto : DECIMAL(10,2)
+  fecha_pago : DATE
+  mes_correspondiente : VARCHAR(7)
+  estado_pago : VARCHAR(20)
+}
+
+' Relaciones
+usuarios ||--o{ estudiantes : "es"
+usuarios ||--o{ arrendadores : "es"
+arrendadores ||--o{ propiedades : "publica"
+propiedades ||--o{ contratos : "tiene"
+estudiantes ||--o{ contratos : "firma"
+contratos ||--o{ pagos : "genera"
+
+@enduml
