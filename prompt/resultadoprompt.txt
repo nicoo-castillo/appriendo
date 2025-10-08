@@ -1,0 +1,42 @@
+@startuml
+!theme plain
+
+entity "Alumno" as Alumno {
+  *id_alumno : INT
+  nombre : VARCHAR
+  email : VARCHAR
+  carrera : VARCHAR
+  contraseña : VARCHAR
+}
+
+entity "Arrendatario" as Arrendatario {
+  *id_arrendatario : INT
+  nombre : VARCHAR
+  email : VARCHAR
+  telefono : VARCHAR
+  contraseña : VARCHAR
+}
+
+entity "Propiedad" as Propiedad {
+  *id_propiedad : INT
+  direccion : VARCHAR
+  precio_mensual : DECIMAL
+  descripcion : TEXT
+  tipo : VARCHAR
+  disponible : BOOLEAN
+  id_arrendatario : INT
+}
+
+entity "Reserva" as Reserva {
+  *id_reserva : INT
+  id_alumno : INT
+  id_propiedad : INT
+  fecha_reserva : DATE
+  estado : VARCHAR
+}
+
+' ===== Relaciones principales =====
+Arrendatario ||--o{ Propiedad : "publica"
+Alumno ||--o{ Reserva : "realiza"
+Propiedad ||--o{ Reserva : "puede tener"
+@enduml
